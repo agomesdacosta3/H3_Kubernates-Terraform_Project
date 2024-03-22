@@ -18,7 +18,9 @@ resource "azurerm_mysql_server" "mysql" {
   version             = "5.7"
   administrator_login = "mysqladmin"
   administrator_login_password = "Pass"
-}
+  ssl_enforcement_enabled = false
+  
+  }
 
 # Output pour afficher les informations de connexion
 output "mysql_connection_string" {
@@ -36,6 +38,10 @@ resource "azurerm_kubernetes_cluster" "caps_cluster" {
     name            = "caps_node_pool"
     node_count      = 3
     vm_size         = "Standard_DS2_v2"
+  }
+
+  identity {
+    type = "SystemAssigned"
   }
 
   tags = {
