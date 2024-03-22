@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 const connection = mysql.createConnection({
   host: 'caps-mysql-server.mysql.database.azure.com',
   user: 'mysqladmin@caps-mysql-server',
-  password: 'Pass',
+  password: 'Passord1234',
   database: 'mydatabase',
   port: 3306,
   ssl: true
