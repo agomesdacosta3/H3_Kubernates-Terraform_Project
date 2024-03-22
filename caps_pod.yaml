@@ -6,7 +6,7 @@ metadata:
     app: caps_app
 spec:
   containers:
-  - name: caps_app_container
+  - name: caps-app-container
     image: ${{ secrets.DOCKERHUB_USERNAME }}/kube_project:latest
     ports:
     - containerPort: 3344  # Port sur lequel votre application écoute à l'intérieur du conteneur
