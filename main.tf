@@ -46,3 +46,4 @@ resource "azurerm_kubernetes_cluster" "caps_cluster" {
     environment = "production"
   }
 }
+
