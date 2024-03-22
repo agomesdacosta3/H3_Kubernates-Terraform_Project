@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: caps-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: caps-app
+  template:
+    metadata:
+      labels:
+        app: caps-app
+    spec:
+      containers:
+      - name: caps-app-container
+        image: ${{ secrets.DOCKERHUB_USERNAME }}/kube_project:latest
+        ports:
+        - containerPort: 3344
