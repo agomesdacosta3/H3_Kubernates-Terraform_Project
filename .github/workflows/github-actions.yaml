@@ -40,4 +40,4 @@ jobs:
       run: ls -la
 
     - name: Update Kubernetes cluster
-      run: kubectl apply -f caps_pod.yml
+      run: kubectl apply -f caps_pod.yaml
