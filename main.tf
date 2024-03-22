@@ -3,17 +3,6 @@ provider "azurerm" {
   features {}
 }
 
-# Définissez les variables
-variable "mysql_admin_username" {
-  description = "MySQL administrator username"
-  type        = string
-}
-
-variable "mysql_admin_password" {
-  description = "MySQL administrator password"
-  type        = string
-}
-
 # Créez un groupe de ressources pour la base de données MySQL
 resource "azurerm_resource_group" "caps_group" {
   name     = "caps-group"
