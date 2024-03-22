@@ -50,5 +50,25 @@ jobs:
         EXTERNAL_IP=$(kubectl get svc caps-app-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
         echo "External IP address: $EXTERNAL_IP"
 
+  terraform-deployment:
+    needs: build-and-push-image
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Plan
+      run: terraform plan
+
+    - name: Terraform Apply
+      run: terraform apply -auto-approve
+
+
 
     
