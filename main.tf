@@ -17,7 +17,7 @@ resource "azurerm_mysql_flexible_server" "mysql" {
   sku_name            = "Standard_B1ms"
   version             = "5.7"
   administrator_login = var.mysql_admin_username
-  administrator_login_password = var.mysql_admin_password
+  administrator_password = var.mysql_admin_password
 }
 
 # Output pour afficher les informations de connexion
