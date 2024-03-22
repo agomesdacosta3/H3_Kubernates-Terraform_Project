@@ -2,6 +2,24 @@ name: GitHub Actions
 on: [push]
 jobs:
 
+  setup-azure:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Install kubectl
+      run: sudo apt-get update && sudo snap install kubectl --classic
+
+    - name: Install Azure CLI
+      run: sudo apt-get -y update && sudo apt-get -y install azure-cli && az
+    
+    - name: Connect Azure Cloud
+      run: az login --service-principal -u ${{ secrets.APPID }} -p ${{ secrets.AZ_SECRET }} --tenant ${{ secrets.TENANT_ID }}
+
+    - name: Get Azure Kubernetes cluster informations
+      run: az aks get-credentials --resource-group hitema_kube --name hitema
+
   build-and-push-image:
     runs-on: ubuntu-latest
     steps:
@@ -43,22 +61,6 @@ jobs:
     needs: terraform-deployment
     runs-on: ubuntu-latest
     steps:
-
-    - name: Checkout Repository
-      uses: actions/checkout@v4
-
-    - name: Install kubectl
-      run: sudo apt-get update && sudo snap install kubectl --classic
-
-    - name: Install Azure CLI
-      run: sudo apt-get -y update && sudo apt-get -y install azure-cli && az
-    
-    - name: Connect Azure Cloud
-      run: az login --service-principal -u ${{ secrets.APPID }} -p ${{ secrets.AZ_SECRET }} --tenant ${{ secrets.TENANT_ID }}
-
-    - name: Get Azure kubernetes cluster informations
-      run: az aks get-credentials --resource-group hitema_kube --name hitema
-
     - name: Deploy to Kubernetes
       run: |
         kubectl apply -f caps_deployment.yml
