@@ -44,3 +44,11 @@ jobs:
       run: |
         kubectl apply -f caps_deployment.yml
         kubectl apply -f caps_service.yml
+
+    - name: Get external IP address
+      run: |
+        EXTERNAL_IP=$(kubectl get svc caps-app-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+        echo "External IP address: $EXTERNAL_IP"
+
+
+    
