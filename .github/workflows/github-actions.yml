@@ -36,5 +36,8 @@ jobs:
     - name: Get Azure kubernetes cluster informations
       run: az aks get-credentials --resource-group hitema_kube --name hitema
 
+    - name: List files at project root
+      run: ls -la
+
     - name: Update Kubernetes cluster
       run: kubectl apply -f caps_pod.yml
