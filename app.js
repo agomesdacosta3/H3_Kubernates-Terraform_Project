@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3344; // Utiliser le port spécifié dans la variable d'environnement PORT, sinon 3344
 
 app.use(bodyParser.json());
 
@@ -19,5 +19,5 @@ app.post('/', (req, res) => {
 
 // Démarrer le serveur
 app.listen(port, () => {
-  console.log(`Server is listening at http://localhost:${port}`);
+  console.log(`Server is listening on port ${port}`);
 });

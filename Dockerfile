@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Exposition du port sur lequel l'application écoute
-EXPOSE 3000
+EXPOSE 3344
 
 # Commande pour démarrer l'application lorsque le conteneur démarre
 CMD [ "node", "app.js" ]
