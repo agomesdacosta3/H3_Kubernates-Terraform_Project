@@ -11,12 +11,12 @@ resource "azurerm_resource_group" "caps_group" {
 
 # Créez une instance MySQL
 resource "azurerm_mysql_flexible_server" "mysql" {
-  name                = "caps-mysql-server"
-  location            = azurerm_resource_group.caps_group.location
-  resource_group_name = azurerm_resource_group.caps_group.name
-  sku_name            = "Standard_B1ms"
-  version             = "5.7"
-  administrator_login = var.mysql_admin_username
+  name                   = "caps-mysql-server"
+  location               = azurerm_resource_group.caps_group.location
+  resource_group_name    = azurerm_resource_group.caps_group.name
+  sku_name               = "GP_Standard_D2ds_v4"
+  version                = "5.7"
+  administrator_login    = var.mysql_admin_username
   administrator_password = var.mysql_admin_password
 }
 
