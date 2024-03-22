@@ -20,36 +20,36 @@ jobs:
     - name: Push Docker image to Docker Hub
       run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/kube_project:latest 
 
-  terraform-deployment:
-    needs: build-and-push-image
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
+  # terraform-deployment:
+  #   needs: build-and-push-image
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Checkout Repository
+  #     uses: actions/checkout@v4
 
-    - name: Install kubectl
-      run: sudo apt-get update && sudo snap install kubectl --classic
+  #   - name: Install kubectl
+  #     run: sudo apt-get update && sudo snap install kubectl --classic
 
-    - name: Install Azure CLI
-      run: sudo apt-get -y update && sudo apt-get -y install azure-cli && az
+  #   - name: Install Azure CLI
+  #     run: sudo apt-get -y update && sudo apt-get -y install azure-cli && az
     
-    - name: Connect Azure Cloud
-      run: az login --service-principal -u ${{ secrets.APPID }} -p ${{ secrets.AZ_SECRET }} --tenant ${{ secrets.TENANT_ID }}
+  #   - name: Connect Azure Cloud
+  #     run: az login --service-principal -u ${{ secrets.APPID }} -p ${{ secrets.AZ_SECRET }} --tenant ${{ secrets.TENANT_ID }}
 
-    - name: Get Azure Kubernetes cluster informations
-      run: az aks get-credentials --resource-group hitema_kube --name hitema
+  #   - name: Get Azure Kubernetes cluster informations
+  #     run: az aks get-credentials --resource-group hitema_kube --name hitema
 
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
+  #   - name: Setup Terraform
+  #     uses: hashicorp/setup-terraform@v1
 
-    - name: Terraform Init
-      run: terraform init
+  #   - name: Terraform Init
+  #     run: terraform init
 
-    - name: Terraform Plan
-      run: terraform plan
+  #   - name: Terraform Plan
+  #     run: terraform plan
 
-    - name: Terraform Apply
-      run: terraform apply -auto-approve
+  #   - name: Terraform Apply
+  #     run: terraform apply -auto-approve
 
   azure-deployment:
     needs: terraform-deployment
@@ -69,7 +69,7 @@ jobs:
 
     - name: Get Azure Kubernetes cluster informations
       run: az aks get-credentials --resource-group hitema_kube --name hitema
-      
+
     - name: Deploy to Kubernetes
       run: |
         kubectl apply -f caps_deployment.yml

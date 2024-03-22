@@ -9,41 +9,78 @@ resource "azurerm_resource_group" "caps_group" {
   location = "West Europe"
 }
 
-# Créez une instance MySQL
-resource "azurerm_mysql_flexible_server" "mysql" {
-  name                   = "caps-mysql-server"
-  location               = azurerm_resource_group.caps_group.location
-  resource_group_name    = azurerm_resource_group.caps_group.name
-  sku_name               = "GP_Standard_D2ds_v4"
-  version                = "5.7"
-  administrator_login    = var.mysql_admin_username
-  administrator_password = var.mysql_admin_password
-}
-
-# Output pour afficher les informations de connexion
-output "mysql_connection_string" {
-  value = "Server=${azurerm_mysql_flexible_server.mysql.fqdn};Port=3306;Database=mydatabase;User Id=${var.mysql_admin_username};Password=${var.mysql_admin_password}"
-}
-
-# Créez un cluster Kubernetes
-resource "azurerm_kubernetes_cluster" "caps_cluster" {
-  name                = "caps-cluster"
-  location            = azurerm_resource_group.caps_group.location
-  resource_group_name = azurerm_resource_group.caps_group.name
-  dns_prefix          = "caps-cluster-dns"
-
-  default_node_pool {
-    name            = "default"
-    node_count      = 3
-    vm_size         = "Standard_DS2_v2"
+# Configurez les ressources Kubernetes pour la base de données MySQL
+resource "kubernetes_deployment" "mysql_deployment" {
+  metadata {
+    name      = "mysql-deployment"
+    namespace = "default"
+    labels = {
+      app = "caps-mysql"
+    }
   }
 
-  identity {
-    type = "SystemAssigned"
-  }
+  spec {
+    replicas = 1
+    selector {
+      match_labels = {
+        app = "caps-app"
+      }
+    }
 
-  tags = {
-    environment = "production"
+    template {
+      metadata {
+        labels = {
+          app = "caps-app"
+        }
+      }
+
+      spec {
+        container {
+          name  = "caps-mysql-container"
+          image = "mysql:5.7"
+          ports {
+            container_port = 3306
+          }
+          env {
+            name  = "MYSQL_ROOT_PASSWORD"
+            value = var.mysql_admin_password
+          }
+          env {
+            name  = "MYSQL_DATABASE"
+            value = "mydatabase"
+          }
+          env {
+            name  = "MYSQL_USER"
+            value = var.mysql_admin_username
+          }
+          env {
+            name  = "MYSQL_PASSWORD"
+            value = var.mysql_admin_password
+          }
+        }
+      }
+    }
   }
 }
 
+# Service Kubernetes pour exposer la base de données MySQL
+resource "kubernetes_service" "caps_mysql_service" {
+  metadata {
+    name      = "caps-mysql-service"
+    namespace = "default"
+  }
+
+  spec {
+    selector = {
+      app = "caps-app"
+    }
+
+    port {
+      protocol    = "TCP"
+      port        = 3306
+      target_port = 3306
+    }
+
+    type = "LoadBalancer"
+  }
+}
