@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: caps-app-container
-        image: ${{ secrets.DOCKERHUB_USERNAME }}/kube_project:latest
+        image: agopmesdacosta3/kube_project:latest
         ports:
         - containerPort: 3344
