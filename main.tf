@@ -1,24 +1,11 @@
-# Configurez le fournisseur Azure
-provider "azurerm" {
-  features {}
-}
-
-# Créez un groupe de ressources pour le cluster Kubernetes
-resource "azurerm_resource_group" "caps_group" {
-  name     = "caps-group"
-  location = "West Europe"
-}
-
-# main.tf
-
-# Configurez le fournisseur Azure
+#Configurez le fournisseur Azure
 provider "azurerm" {
   features {}
 }
 
 # Créez un groupe de ressources pour la base de données MySQL
-resource "azurerm_resource_group" "mysql_group" {
-  name     = "mysql-group"
+resource "azurerm_resource_group" "caps_group" {
+  name     = "caps-group"
   location = "West Europe"
 }
 
