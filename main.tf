@@ -1,6 +1,17 @@
-#Configurez le fournisseur Azure
+# Configurez le fournisseur Azure
 provider "azurerm" {
   features {}
+}
+
+# Définissez les variables
+variable "mysql_admin_username" {
+  description = "MySQL administrator username"
+  type        = string
+}
+
+variable "mysql_admin_password" {
+  description = "MySQL administrator password"
+  type        = string
 }
 
 # Créez un groupe de ressources pour la base de données MySQL
@@ -14,17 +25,15 @@ resource "azurerm_mysql_flexible_server" "mysql" {
   name                = "caps-mysql-server"
   location            = azurerm_resource_group.caps_group.location
   resource_group_name = azurerm_resource_group.caps_group.name
-  sku_name            = "B_Gen5_1"
+  sku_name            = "Standard_B1ms"
   version             = "5.7"
-  administrator_login = "mysqladmin"
-  administrator_login_password = "Pass"
-  ssl_enforcement_enabled = false
-  
-  }
+  administrator_login = var.mysql_admin_username
+  administrator_login_password = var.mysql_admin_password
+}
 
 # Output pour afficher les informations de connexion
 output "mysql_connection_string" {
-  value = "Server=${azurerm_mysql_server.mysql.fqdn};Port=3306;Database=mydatabase;User Id=mysqladmin;Password=Pass;"
+  value = "Server=${azurerm_mysql_flexible_server.mysql.fqdn};Port=3306;Database=mydatabase;User Id=${var.mysql_admin_username};Password=${var.mysql_admin_password}"
 }
 
 # Créez un cluster Kubernetes
