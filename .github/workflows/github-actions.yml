@@ -20,6 +20,10 @@ jobs:
     - name: Push Docker image to Docker Hub
       run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/kube_project:latest 
 
+  azure-deployment:
+    needs: build-and-push-image
+    runs-on: ubuntu-latest
+    steps:
     - name: Install kubectl
       run: sudo apt-get update && sudo snap install kubectl --classic
 
