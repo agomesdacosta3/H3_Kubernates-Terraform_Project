@@ -10,7 +10,7 @@ resource "azurerm_resource_group" "caps_group" {
 }
 
 # Créez une instance MySQL
-resource "azurerm_mysql_server" "mysql" {
+resource "azurerm_mysql_flexible_server" "mysql" {
   name                = "caps-mysql-server"
   location            = azurerm_resource_group.caps_group.location
   resource_group_name = azurerm_resource_group.caps_group.name
@@ -35,7 +35,7 @@ resource "azurerm_kubernetes_cluster" "caps_cluster" {
   dns_prefix          = "caps-cluster-dns"
 
   default_node_pool {
-    name            = "caps_node_pool"
+    name            = "default"
     node_count      = 3
     vm_size         = "Standard_DS2_v2"
   }
